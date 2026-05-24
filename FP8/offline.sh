@@ -28,8 +28,6 @@ export DYN_LOG=debug  # Change from 'info' to 'debug'
 export VLLM_LOGGING_LEVEL=DEBUG
 
 export VLLM_USE_FLASHINFER_SAMPLER=1
-export VLLM_USE_FLASHINFER_MOE_FP4=1
-export VLLM_FLASHINFER_MOE_BACKEND=latency
 export VLLM_FLASHINFER_WORKSPACE_BUFFER_SIZE=$((6 * 256 * 1024 * 1024))
 export VLLM_USE_TRITON_POS_EMBED=1
 export VLLM_MM_ENCODER_FP8_ATTN=1
@@ -56,7 +54,7 @@ srun \
         --use-http-client \
         --max-concurrency=2048 \
         --dynamo.num_warmup_requests_per_vllm_instance=400 \
-        --dynamo.model.repo_id=nvidia/Qwen3-VL-235B-A22B-Instruct-NVFP4-MLPerf-Inference-Closed-V6.0 \
+        --dynamo.model.repo_id=Qwen/Qwen3-VL-235B-A22B-Instruct-FP8 \
         --dynamo.model.revision=main \
         --settings.test.scenario offline \
         --settings.test.mode ${MODE} \
@@ -91,6 +89,7 @@ srun \
         --dynamo.vllm.cli=--connector=none \
         --dynamo.vllm.cli=--kv-events-config='{\"publisher\":\"null\"}' \
         --dynamo.vllm.cli=--mm-processor-cache-gb=0 \
+        --dynamo.vllm.cli=--kv-cache-dtype=fp8 \
         --dynamo.vllm.enable_numa_binding=true \
         --dynamo.frontend.enable_numa_binding=true; \
         EXIT_CODE=\$?; \
