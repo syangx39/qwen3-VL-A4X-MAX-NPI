@@ -21,7 +21,8 @@ HF_TOKEN=${HF_TOKEN:-""}
 
 mkdir -p "${OUTPUT_HOST_DIR}"
 
-mounts="${HF_CACHE_HOST_DIR}:/root/.cache/huggingface,${OUTPUT_HOST_DIR}:/output/"
+# mounts="${HF_CACHE_HOST_DIR}:/root/.cache/huggingface,${OUTPUT_HOST_DIR}:/output/"
+mounts="${HF_CACHE_HOST_DIR}:/root/.cache/huggingface,${OUTPUT_HOST_DIR}:/output/,/tmp/container_cache:/home/xiaotongyang_google_com/.cache"
 
 export DYN_LOG=debug  # Change from 'info' to 'debug'
 export VLLM_LOGGING_LEVEL=DEBUG
@@ -37,6 +38,8 @@ export OMP_NUM_THREADS=64
 
 echo "Starting job at: $(date)"
 echo $SLURM_GPUS_ON_NODE
+
+mkdir -p /tmp/container_cache
 
 # NUMA binding: GPU 0-1 use NUMA node 0, GPU 2-3 use NUMA node 1
 srun \
